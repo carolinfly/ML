@@ -4,7 +4,7 @@ Machine-Learning Demo Code
 
 2. Simple linear regression
 
-3. Multiple linear regression: Backward Elimination
+3. Multiple linear regression: backward elimination
 
 4. Polynomial regression
 
