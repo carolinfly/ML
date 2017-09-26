@@ -1,4 +1,3 @@
-- Portfolio Optimization
  Machine-Learning Demo Code
 
 - Data preprocessing
