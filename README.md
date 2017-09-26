@@ -1,11 +1,11 @@
  Machine-Learning Demo Code
 
-1. Data preprocessing
+-Data preprocessing
 
-2. Simple linear regression
+-Simple linear regression
 
-3. Multiple linear regression: backward elimination method
+-Multiple linear regression: backward elimination method
 
-4. Polynomial regression
+-Polynomial regression
 
-5. Support vector regression
+-Support vector regression
