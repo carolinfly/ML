@@ -1,11 +1,12 @@
+- Portfolio Optimization
  Machine-Learning Demo Code
 
--Data preprocessing
+- Data preprocessing
 
--Simple linear regression
+- Simple linear regression
 
--Multiple linear regression: backward elimination method
+- Multiple linear regression: backward elimination method
 
--Polynomial regression
+- Polynomial regression
 
--Support vector regression
+- Support vector regression
