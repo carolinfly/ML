@@ -1,4 +1,4 @@
- Machine-Learning Demo Code
+Machine-Learning Demo Code
 
 - Data preprocessing
 
@@ -9,3 +9,5 @@
 - Polynomial regression
 
 - Support vector regression
+
+- Prediction Using Neural Networks in R 
