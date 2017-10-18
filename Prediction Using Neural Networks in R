@@ -1,0 +1,95 @@
+## Machine Learning Project
+## Title: Prediction Using Neural Networks
+## Date: 05/14/2017
+
+## apply on sample data
+library(MASS)
+require(Grid2Polygons)
+library(gridBase)
+library(neuralnet)
+library(nnet)
+#######
+data<-read.csv("Data_0512.csv",header=TRUE ,sep=",",stringsAsFactors=F)
+data.clearn<-data[complete.cases(data),]
+data.clearn$Salary<-gsub(",","",data.clearn$Salary)
+data.clearn$Salary<-gsub("\\$","",data.clearn$Salary)
+data.clearn$Salary<-as.numeric(data.clearn$Salary)
+X<-data.clearn
+colnames(X) <- c("ID", "Q", "EmpIDm", "Sex", "Race", "Age", "Visit", "Sal", "Score")
+
+head(X)
+X.2 <- X
+X.2$Sex <- as.numeric(X.2$Sex)
+X.2$Race <- as.numeric(X.2$Race)
+X.2$Visit <- as.numeric(X.2$Visit)
+
+## 1st Quarter 
+X2.Q1 <- X.2[X.2$Q==1,]
+summary(X2.Q1)
+y <- X2.Q1[complete.cases(X2.Q1),]
+dim(y) #600   9
+
+#net.sqrt <- neuralnet(Output~Input, trainingdata, hidden=10, threshold=0.01)
+
+# normalize data before training
+
+maxs <- apply(y, 2, max)
+mins <- apply(y, 2, min)
+index <- sample(1:nrow(y), round(0.75*nrow(y)))
+scaled <- as.data.frame(scale(y, center=mins, scale=maxs-mins))
+train_ <- scaled[index,]
+test_ <- scaled[-index,]
+
+nn <- neuralnet(Score~ Visit + Age + Sex + Race, train_, hidden=2, threshold=0.01, err.fct="sse",
+                linear.output=FALSE)
+
+names(nn)
+nn$result.matrix
+summary(nn)
+
+nn.bp <- neuralnet(Score~ Visit + Age + Sex + Race, train_, hidden=2, threshold=0.01, err.fct="sse",
+                   linear.output=FALSE, algorithm = "backprop", learningrate=0.01)
+nn.bp$result.matrix
+
+head(nn$generalized.weights[[1]])
+
+
+# visualization
+plot(nn)
+plot(nn.bp)
+
+## plot generalized weights
+par(mfrow=c(1,2))
+#gwplot(nn, selected.covariate = "Visit", min=-2.5, max=5)
+###train result
+compute(nn, byrow=TRUE, ncol=4)
+
+pr.nn <- compute(nn.bp, train_[,c("Sex","Age","Visit","Race")])
+pr.nn_ <- pr.nn$net.result*(max(y$Score)-min(y$Score))+min(y$Score)
+
+train.r <- (train_$Score)*(max(y$Score)-min(y$Score))+min(y$Score)
+
+MSE.nn <- sum((train.r - pr.nn_)^2)/nrow(train_)
+print(MSE.nn)
+
+
+plot(train.r, pr.nn_, col='red', main='Neural Network Prediction(Training set)',
+     xlab='Actual Health Score',ylab = 'Predicted Health score', pch=18, cex=0.7)
+abline(0,1,lwd=2)
+legend('bottomright',legend='NN',pch=18,col='red', bty='n')
+
+
+###predict result
+
+
+pr.nn2 <- compute(nn.bp, test_[,c("Sex","Age","Visit","Race")])
+pr.nn_2 <- pr.nn2$net.result*(max(y$Score)-min(y$Score))+min(y$Score)
+test.r <- (test_$Score)*(max(y$Score)-min(y$Score))+min(y$Score)
+MSE.nn2 <- sum((test.r - pr.nn_2)^2)/nrow(test_)
+print(MSE.nn2)
+
+
+plot(test.r, pr.nn_2, col='red', main='Neural Network Prediction(Testing set)',
+     xlab='Actual Health Score',ylab = 'Predicted Health score', pch=18, cex=0.7)
+abline(0,1,lwd=2)
+legend('bottomright',legend='NN',pch=18,col='red', bty='n')
