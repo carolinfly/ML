@@ -12,4 +12,6 @@ Machine-Learning Demo Code
 
 - Decision tree regression
 
+- Random forest regression
+
 - Prediction Using Neural Networks in R 
