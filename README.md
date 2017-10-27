@@ -10,4 +10,6 @@ Machine-Learning Demo Code
 
 - Support vector regression
 
+- Decision tree regression
+
 - Prediction Using Neural Networks in R 
