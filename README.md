@@ -1,3 +1,4 @@
+
 Machine-Learning Demo Code
 
 - Data preprocessing
@@ -15,3 +16,5 @@ Machine-Learning Demo Code
 - Random forest regression
 
 - Prediction Using Neural Networks in R 
+
+- Prediction of Stock Prices Using Regression Models 
