@@ -17,4 +17,3 @@ Machine-Learning Demo Code
 
 - Prediction Using Neural Networks in R 
 
-- Prediction of Stock Prices Using Regression Models 
