@@ -1,4 +1,5 @@
-Machine-Learning Demo Code
+
+##Machine-Learning Demo Code
 
 - Data preprocessing
 
@@ -18,3 +19,4 @@ Machine-Learning Demo Code
 
 - Logistics regression
 
+- K-Nearest Neighbors
