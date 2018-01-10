@@ -1,0 +1,57 @@
+# while_for_list
+"""
+Created on Wed Jan 10 16:58:52 2018
+
+@author: Shimeng Lin
+"""
+
+# while loop, stop when the condition is no longer true
+i=1
+while i<11:
+    print(2**i)
+    i+=1
+    
+# list
+fibList=[1,2,3,5,8,13,21,34,55,89]
+print(fibList)
+
+# a list of strings
+nameList=['Socrates', 'Plato', 'Aristotle']
+
+# a list of mixed data types
+nameAndLenList=['Socrates',8, 'Plato', 5,'Aristotle',9]
+
+# apply functions on list
+len(fibList)
+
+# index
+nameList[2]
+nameList.index('Aristotle')
+
+# range
+nameAndLenList[2:5]
+
+# append
+nameList.append('Alexander the Great')
+
+# remove
+alex='Alexander the Great'
+nameList.remove(alex)
+print(nameList)
+
+maxFib=max(fibList)
+minFib=min(fibList)
+print(maxFib, minFib)
+
+# for loop
+for x in fibList:
+    print(x**2)
+
+for i in nameList:
+    print(i, len(i), end='\n') # '\t'; \n -> start a new line
+
+i=0 # python index starts with 0
+while i < len(nameList):
+    print(nameList[i], len(nameList[i]), end='\t')
+    print()
+    i+=1
