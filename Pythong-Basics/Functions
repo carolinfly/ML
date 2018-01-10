@@ -1,0 +1,98 @@
+"""
+Python Basics: Functions
+
+@author: Shimeng Lin
+"""
+
+# define a function
+def show_kilometers_to_miles():
+    print('There are 1.60934 Kilometers to 1 mile')
+
+# call function
+show_kilometers_to_miles()
+
+s=str(3.141)
+s
+
+# accept arguments
+def convert_miles_to_kilometers(miles):
+    kilometers=miles*1.60934
+    print(kilometers)
+
+convert_miles_to_kilometers(13.1)
+
+# multiple arguments
+def convert_miles_to_kilometers(value, measurement):
+    if measurement=='m':
+        print(value*1.60934)
+    elif measurement=='km':
+        print(value/1.60934)
+    else:
+        print('invalid input')
+
+convert_miles_to_kilometers(5, 'km')
+convert_miles_to_kilometers(5, 'm')
+convert_miles_to_kilometers(5, 'k')
+
+# default argument
+def convert_miles_to_kilometers(value, measurement='km'):
+    if measurement=='m':
+        print(value*1.60934)
+    elif measurement=='km':
+        print(value/1.60934)
+    else:
+        print('invalid input')
+
+convert_miles_to_kilometers(5)
+
+# override default argument
+convert_miles_to_kilometers(5, 'm')
+
+
+def convert_measure(amount, fromMeasurement='miles', toMeasurement='kilometers'):
+    if fromMeasurement == 'miles' and toMeasurement == 'kilometers':
+        print(amount*1.60934)
+    elif fromMeasurement == 'miles' and toMeasurement == 'feet':
+        print(amount*5280)
+    elif fromMeasurement == 'kilometers' and toMeasurement == 'miles':
+        print(amount*.621371)
+    elif fromMeasurement=='kilometers' and toMeasurement=='feet':
+        print(amount*3280.84)
+    else:
+        print('invalid input or no need for conversion')
+
+convert_measure(5)
+convert_measure(5,'miles','feet')
+convert_measure(5,'miles', toMeasurement='feet')
+convert_measure(5, toMeasurement='feet')
+convert_measure(toMeasurement = 'feet', fromMeasurement = 'miles', amount = 5)
+
+# input function
+name = input('Pls enter your name:')
+greating = 'Hi there, ' + name + '!'
+print(greating)
+
+# make function return a value
+def convert_miles_to_kilometers(miles):
+    kilometers=miles*1.60934
+    return kilometers
+
+result=convert_miles_to_kilometers(5)
+print (result)
+
+# global variable
+laps = 2
+
+def convert_miles_to_kilometers(miles):
+    kilometers=miles*1.60934*laps
+    return kilometers
+
+result=convert_miles_to_kilometers(5)
+print (result)
+
+
+
+
+
+
+
