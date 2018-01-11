@@ -1,0 +1,95 @@
+# Dictionary
+"""
+Created on Wed Jan 10 18:09:44 2018
+
+@author: Shimeng Lin
+"""
+
+authorDic = {'F Scott Fitzgerald': 1920,
+             'Ernest Hemingway': 1925,
+             'William Faulkner': 1926,
+             'Aldous Huxley': 1921}
+print(authorDic)
+
+# values are lists of strings
+novelDic = {'F. Scott Fitzgerald': ['This Side of Paradise',
+                                    'The Beautiful and Damned',
+                                    'The Great Gatsby'],
+            'Ernest Hemingway': ['In Our Time',
+                                 'The Torrents of Spring',
+                                 'The Sun Also Rises',
+                                 'Men without Women'],
+            'William Faulkner': ['Soldiers\' Pay',
+                                 'Mosquitoes',
+                                 'Sartoris',
+                                 'The Sound and the Fury',
+                                 'As I Lay Dying'],
+            'Aldous Huxley': ['Crome Yellow',
+                              'Antic Hay',
+                              'Those Barren Leaves']
+            }
+print(novelDic)                            
+
+# retrieve elements in dictionary
+print(novelDic['Aldous Huxley'])
+
+# the number of keys
+len(novelDic)
+
+# whether a key is in the dictionary -> in/ not in operators
+if 'John Steinbeck' not in novelDic:
+    print('The key is not in the dictionary')
+
+if 'Aldous Huxley' in novelDic:
+    print('The key is in the dictionary')
+
+# for loop
+for i in novelDic:
+    print(i, len(novelDic[i]))
+
+# add a key and its corresponding values
+novelDic['John Steinbeck']=['Cup of Gold'
+                            , 'The Pastures of Heaven'
+                            , 'The Red Pony'
+                            , 'To a God Unknown'
+                            , 'Tortilla Flat'
+                            , 'In Dubious Battle']
+
+print(novelDic)
+
+for i in novelDic:
+    print(i, len(novelDic[i]))
+
+# delete
+del novelDic['John Steinbeck']
+print(novelDic)
+
+for i in novelDic:
+    print(i, len(novelDic[i]))
+
+# get() method
+works=novelDic.get('Gertrude Stein', 'Author not found')
+print(works)
+
+works_2=novelDic.get('Aldous Huxley', 'Author not found')
+print(works_2)
+
+# print all keys
+for k in novelDic.keys():
+    print(k)
+
+# print all values
+for v in novelDic.values():
+    print(v)
+
+# pop method: both retrieve and item and delete it
+print(novelDic.pop('William Faulkner'))
+
+for i in novelDic:
+    print(i, len(novelDic[i]))
+
+# popitem method: randomly retrieve an element and delete it
+print(novelDic.popitem())
+
+for i in novelDic:
+    print(i, len(novelDic[i]))
