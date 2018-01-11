@@ -1,0 +1,88 @@
+# IO, Tuples, Substringing
+"""
+Created on Wed Jan 10 23:32:23 2018
+
+@author: Shimeng Lin
+"""
+
+##############
+## I/O
+
+# create a new file and write to it
+newFile=open('composer.txt', 'w')
+newFile.write('Chopin')
+newFile.close()
+
+newFile=open('composer.txt', 'w')
+newFile.write('Shostakovich') # Chopin will be deleted
+newFile.close()
+
+# append without delete
+newFile=open('composer.txt', 'a')
+newFile.write('\nSmetana') # start a new line
+newFile.close()
+
+# read
+readFile=open('composer.txt', 'r')
+line=readFile.readline()
+print(line) # show the 1st line
+readFile.close()
+
+# read the next line
+readFile=open('composer.txt', 'r')
+line=readFile.readline()
+print(line) 
+line=readFile.readline()
+print(line)
+readFile.close()
+
+# use a loop
+readFile=open('composer.txt', 'r')
+line=readFile.readline()
+while line != '':
+    print(line) 
+    line=readFile.readline()
+readFile.close()
+
+# specify another path
+newFile=open(r'C:\Users\Shimeng Lin\Desktop\Fordham\Spring 2017\Courses\0 - Python\tmp.txt', 'w')
+newFile.write('Good Luck')
+newFile.close()
+
+
+###############
+## Tuple
+
+# create a tuple
+nocturneTuple = (9, 15, 27, 32, 37, 48, 55, 62) 
+print(nocturneTuple[4])
+
+# convert tuple to list
+nocturneList = list(nocturneTuple)
+print(nocturneList) # bracket
+
+# convert list to tuple
+backToTuple = tuple(nocturneList)
+print(backToTuple) # parenthesis
+
+# mutable - list
+print(nocturneList)
+nocturneList.reverse()
+print(nocturneList)
+
+##############
+## substring
+
+polonius = 'This above all: to thine ownself be true.'
+print(polonius[16:])
+
+print(polonius[polonius.index(':')+2:])
+
+print(polonius[-5:])
+
+# change the step
+print(polonius[::2])
+
+print(polonius[::-1])
+
+polonius = polonius[::-1]
