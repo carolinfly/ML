@@ -1,0 +1,53 @@
+# moduleExample
+"""
+Created on Wed Jan 10 23:02:59 2018
+
+@author: Shimeng Lin
+"""
+
+## stringReverse.py
+
+# def reverse(s):
+#     sr = s[::-1]
+#     return sr
+
+import stringReverse
+
+quote = 'That which we obtain too easily, we esteem too lightly'
+reverseQuote = stringReverse.reverse(quote)
+
+print(reverseQuote)
+
+# command prompt: $pip install beautifulsoup4
+
+from bs4 import BeautifulSoup
+from urllib.request import urlopen
+
+url = 'http://www.musicpriceguide.com/'
+page = urlopen(url)
+soup = BeautifulSoup(page, 'html.parser')
+result = soup.prettify()
+
+print(result)
+
+
+
+urlList = ['http://www.musicpriceguide.com/index.php?page=1'
+, 'http://www.musicpriceguide.com/index.php?page=2'
+, 'http://www.musicpriceguide.com/index.php?page=3'
+, 'http://www.musicpriceguide.com/index.php?page=4'
+, 'http://www.musicpriceguide.com/index.php?page=5'
+, 'http://www.musicpriceguide.com/index.php?page=6'
+, 'http://www.musicpriceguide.com/index.php?page=7'
+, 'http://www.musicpriceguide.com/index.php?page=8'
+, 'http://www.musicpriceguide.com/index.php?page=9']
+
+for url in urlList:
+    page = urlopen(url)
+    soup = BeautifulSoup(page, 'html.parser')
+    result = soup.prettify()
+    pageNumber = url[-1:]
+    fileName = r'C:\Users\Shimeng Lin\Desktop\Fordham\Spring 2017\Courses\0 - Python\Python Basics'+pageNumber
+    outputFile = open(fileName, 'w', encoding= 'utf8')
+    outputFile.write(result)
+    outputFile.close()
