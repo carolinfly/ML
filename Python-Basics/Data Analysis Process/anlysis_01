@@ -1,0 +1,181 @@
+"""
+Created on Sun Jan 28 19:52:51 2018
+
+@author: Carol Lin
+"""
+
+## Representing a csv as a list of rows
+
+# 1. each row is a list
+csv=[['A1', 'A2', 'A3'], ['B1', 'B2', 'B3']]
+
+# 2. each row is a dictionary
+csv=[{'name1': 'A1', 'name2': 'A2', 'name3': 'A3'}, 
+     {'name1': 'A1', 'name2': 'A2', 'name3': 'A3'}]
+
+
+import unicodecsv
+
+enrollments=[]
+f=open('enrollments.csv', 'rb') # the file is opened for reading
+# each row will be a dictionary
+reader = unicodecsv.DictReader(f)
+# can only loop over iterator once
+for row in reader:
+    enrollments.append(row)
+f.close()
+# print out the 1st row
+enrollments[0]
+
+# use with statement to avoid closing a file
+import unicodecsv
+enrollments=[]
+
+with open('enrollments.csv', 'rb') as f: 
+    reader = unicodecsv.DictReader(f)
+    for row in reader:
+        enrollments.append(row) # the file will be automatically closed when indent ends 
+
+# an easier way to convert iterator to a list
+import unicodecsv
+
+with open('enrollments.csv', 'rb') as f: 
+    reader = unicodecsv.DictReader(f)
+    enrollments=list(reader)
+enrollments[0]
+    
+
+## read in data from daily_engagement.csv and project_submissions.csv
+import unicodecsv
+
+daily_engagement = []
+project_submissions = []
+
+# engagement_filename = '/datasets/ud170/udacity-students/daily_engagement.csv'
+
+with open('daily_engagement.csv', 'rb') as f: 
+    reader = unicodecsv.DictReader(f)
+    for row in reader:
+        daily_engagement.append(row)
+        
+daily_engagement[0]
+
+with open('project_submissions.csv', 'rb') as f: 
+    reader = unicodecsv.DictReader(f)
+    for row in reader:
+        project_submissions.append(row)
+        
+project_submissions[0]
+
+# a shorter version
+import unicodecsv
+
+with open('daily_engagement.csv', 'rb') as f: 
+    reader = unicodecsv.DictReader(f)
+    daily_engagement=list(reader)
+print(daily_engagement[0])
+    
+# write a function - read_csv
+import unicodecsv
+def read_csv(filename):
+    with open(filename, 'rb') as f: 
+        reader = unicodecsv.DictReader(f)
+        return list(reader)
+    
+# call function
+enrollments = read_csv('enrollments.csv')
+daily_engagement = read_csv('daily_engagement.csv')
+project_submissions = read_csv('project_submissions.csv')
+   
+enrollments[0]   
+    
+##################
+## Fixing data types
+#################
+
+# convert string to datetime object
+from datetime import datetime as dt
+
+def parse_date(date): # input date string
+    if date == '':
+        return None
+    else:
+        return dt.strptime(date, '%Y-%m-%d')
+    
+def parse_maybe_int(i): # input date string
+    if i == '':
+        return None
+    else:
+        return int(i)
+
+# clean up date types in the enrollments table
+for enrollment in enrollments:
+    enrollment['cancel_date'] = parse_date(enrollment['cancel_date'])
+    enrollment['days_to_cancel'] = parse_maybe_int(enrollment['days_to_cancel'] )
+    enrollment['is_canceled'] = enrollment['is_canceled'] == 'True' # boolean
+    enrollment['is_udacity'] = enrollment['is_udacity'] == 'True'
+    enrollment['join_date'] = parse_date(enrollment['join_date'])
+
+enrollments[0]
+
+
+# engagement table
+for engagement_record in daily_engagement:
+    engagement_record['lessons_completed'] = int(float(engagement_record['lessons_completed']))
+    engagement_record['num_courses_visited'] = int(float(engagement_record['num_courses_visited']))
+    engagement_record['projects_completed'] = int(float(engagement_record['projects_completed']))
+    engagement_record['total_minutes_visited'] = float(engagement_record['total_minutes_visited'])
+    engagement_record['utc_date'] = parse_date(engagement_record['utc_date'])
+
+daily_engagement[0]
+
+# submissions table
+for submission in project_submissions:
+    submission['completion_date'] = parse_date(submission['completion_date'])
+    submission['creation_date'] = parse_date(submission['creation_date'])
+
+project_submissions[0]
+
+## Rename column - modify the list
+for each in daily_engagement:
+    each['account_key'] = each['acct'] # create a new key
+    del each['acct']
+    
+daily_engagement[0]['account_key']
+
+def get_unique_students(data):
+    unique_students = set()
+    for data_point in data:
+        unique_students.add(data_point['account_key'])
+    return unique_students
+
+unique_enrolled_students = get_unique_students(enrollments)
+unique_engaged_students = get_unique_students(daily_engagement)
+unique_submitted_students = get_unique_students(project_submissions)
+
+## the number of rows in the three tables
+len(enrollments) # 1640
+len(daily_engagement) # 136240, multiple entries for each student
+len(project_submissions) # 3642
+
+## the number of unique students in the table
+
+# create an empty set
+enrollments[0]
+unique_enrolled_students = set()
+for enrollment in enrollments:
+    unique_enrolled_students.add(enrollment['account_key']) 
+len(unique_enrolled_students) #1302
+
+daily_engagement[0]
+unique_engaged_students = set()
+for engagement in daily_engagement:
+    unique_engaged_students.add(engagement['acct']) 
+len(unique_engaged_students) # 1237
+# type(engagement['acct'])
+
+project_submissions[0]
+unique_submitted_students = set()
+for submission in project_submissions:
+    unique_submitted_students.add(int(float(submission['account_key'])))
+len(unique_submitted_students) # 743
