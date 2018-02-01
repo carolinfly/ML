@@ -179,3 +179,183 @@ unique_submitted_students = set()
 for submission in project_submissions:
     unique_submitted_students.add(int(float(submission['account_key'])))
 len(unique_submitted_students) # 743
+
+
+## Identify enrolled students with no engagement record
+daily_engagement[0]
+enrollments[0]
+
+for each in enrollments:
+    student = each['account_key']
+    if student not in unique_engaged_students:
+        print(each)
+        break # only print one of the qualified selections from the enrollments table; exit the loop using break
+# join and cancel dates are the same
+
+
+## the number of rows in the enrollments table where the student stayed enrolled
+#  at least one day and there is no entry fro that account key in the daily engagement table  
+
+# create a variable to store targets
+num_problem_students = 0
+
+for each in enrollments:
+    student = each['account_key']
+    if (student not in unique_engaged_students) \
+    and (each['join_date'] != each['cancel_date']):
+        num_problem_students += 1
+        
+print(num_problem_students) # 3
+
+# print out all of them: those are test accounts ('is_udacity', True). They are not guranteed to appear in the engagement table
+for each in enrollments:
+    student = each['account_key']
+    if (student not in unique_engaged_students) \
+    and (each['join_date'] != each['cancel_date']):
+        print(each)
+
+## Identify Udacity test accounts
+udacity_test_accounts = set()
+
+for each in enrollments:
+    if each['is_udacity']:
+        udacity_test_accounts.add(each['account_key'])
+        
+print(udacity_test_accounts)
+len(udacity_test_accounts) # 6
+
+# Remove data associated with those accounts
+def remove_udacity_accounts(data):
+    non_udacity_data = []
+    for data_point in data:
+        if data_point['account_key'] not in udacity_test_accounts:
+            non_udacity_data.append(data_point)
+    return non_udacity_data
+
+# Pull out the non-test account elements
+non_udacity_enrollments = remove_udacity_accounts(enrollments)
+non_udacity_engagement = remove_udacity_accounts(daily_engagement)
+non_udacity_submissions = remove_udacity_accounts(project_submissions)
+
+print(len(non_udacity_enrollments)) # 1622
+print(len(non_udacity_engagement)) # 135656
+print(len(non_udacity_submissions)) # 3634
+
+
+#############
+# Exploration
+#############
+
+## Paid Students
+
+# daily_engagement[0]
+# enrollments[0]
+
+paid_students = {}
+
+for each in non_udacity_enrollments:
+    if not each['is_canceled'] or each['days_to_cancel'] > 7:
+        account_key = each['account_key']
+        enrollment_date = each['join_date']
+        
+        # add to paid_students dictionary - key (account_key) and value (enrollment_date)
+        if account_key not in paid_students or \
+            enrollment_date > paid_students[account_key]: # save the most recent date instead of an arbitrary one
+            paid_students[account_key] = enrollment_date
+
+print(len(paid_students)) # 995
+
+## Get data from the first week
+# students in paid_student
+# within one week of the student's join date
+
+# the engagement record happened within one week of the student joining
+def within_one_week(join_date, engagement_date):
+    time_delta = engagement_date - join_date # engagement happened after joining
+    return time_delta.days < 7 and time_delta.days>=0
+
+# exclude accounts that cancel free trials
+def remove_free_trial_cancels(data):
+    # create a list
+    new_data = []
+    for each in data:
+        if each['account_key'] in paid_students:
+            new_data.append(each)
+    return(new_data)
+
+paid_enrollments = remove_free_trial_cancels(non_udacity_enrollments)
+paid_engagement = remove_free_trial_cancels(non_udacity_engagement)
+paid_submissions = remove_free_trial_cancels(non_udacity_submissions)
+
+
+paid_engagement_in_first_week = []
+
+for data_point in paid_engagement:
+    account_key = data_point['account_key']
+    join_date = paid_students[account_key]
+    engagement_record_date = data_point['utc_date']
+    if within_one_week(join_date, engagement_record_date):
+        # pre-defined above
+        paid_engagement_in_first_week.append(data_point)
+
+len(paid_engagement_in_first_week) # 6919      
+
+
+## Average mins spent in classroom
+from collections import defaultdict
+
+engagement_by_account = defaultdict(list) # if I ever try to look up a key
+#                                           in the dictionary and the key is not there,
+#                                           I'll get the empty list instead
+    
+for data_point in paid_engagement_in_first_week:
+    account_key = data_point['account_key'] # save account keys in the variable
+    
+    # look up the list of engagement records for that account key
+    engagement_by_account[account_key].append(data_point) # if never added that account key yet, then I get the empty list
+    #                                                 append engagement record to that account key
+    
+# add up the number of mins vistied by each account, save in dictionary
+total_minutes_by_account = {} # a number for each account key
+
+#    key,         value
+# looping over the .times, I got both the key and value for each entry in the dictionary
+for account_key, engagement_for_student in engagement_by_account.items():
+    total_minutes = 0 # initialize for each account
+    # add up using values
+    for data_point in engagement_for_student: # engagement_for_student is a list of engagement records of each account
+        total_minutes += data_point['total_minutes_visited']
+    # store the sum under account key
+    total_minutes_by_account[account_key] = total_minutes
+
+# only get the values in dictionary, account_key no longer relevant
+total_minutes = total_minutes_by_account.values()
+# total_minutes_by_account.keys()
+
+# Calculate mean
+import numpy as np
+
+print('Mean:', np.mean(list(total_minutes))) # 306.708326753
+print('Standard Deviation:', np.std(list(total_minutes))) # 412.996933409
+print('Minimum:', np.min(list(total_minutes))) # 0
+print('Maximum:', np.max(list(total_minutes))) # 3564.7332645
+
+
+# Identify the student who has the max minutes
+student_with_max_minutes = None
+max_minutes = 0
+
+for student, total_minutes in total_minutes_by_account.items():
+    if total_minutes > max_minutes:
+        # reset
+        max_minutes = total_minutes
+        student_with_max_minutes = student
+        
+max_minutes # 3564.7332645
+student_with_max_minutes # '163'
+
+# print all engagement records for that student
+for engagement_record in paid_engagement_in_first_week:
+    if engagement_record['account_key'] == student_with_max_minutes:
+        print(engagement_record)
+
