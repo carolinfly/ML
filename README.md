@@ -1,4 +1,4 @@
-## Kaggle Machine Learning in Python Workshop
+## Workshop: Kaggle Machine Learning in Python 
  * [Level I & II](https://www.kaggle.com/learn/machine-learning)
 
 
