@@ -1,0 +1,13 @@
+@My Kaggle output: https://www.kaggle.com/carolinfly0218/my-model
+
+# Data: Predict home prices using data from Melbourne, Australia, then write code to build a model predicting prices in the US state of Iowa. 
+
+import pandas as pd
+
+main_file_path = '../input/train.csv'
+data = pd.read_csv(main_file_path)
+print(data.describe())
+
+# Note: imagine sorting each column from lowest to highest value. The first (smallest) value is the min. 
+#       If you go a quarter way through the list, you'll find a number that is bigger than 25% of the values and smaller than 75% 
+#       of the values. That is the 25% value (pronounced "25th percentile"). 
