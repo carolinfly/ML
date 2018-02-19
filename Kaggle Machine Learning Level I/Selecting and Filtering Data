@@ -1,0 +1,42 @@
+#################################
+# Selecting and Filtering Data
+#################################
+
+@My Kaggle output: https://www.kaggle.com/carolinfly0218/selecting-and-filtering-in-pandas
+
+# columns property of the DataFrame 
+import pandas as pd
+
+melbourne_file_path = '../input/melbourne-housing-snapshot/melb_data.csv'
+melbourne_data = pd.read_csv(melbourne_file_path) 
+print(melbourne_data.columns)
+
+## Selecting a Single Column
+# store the series of prices separately as melbourne_price_data.
+melbourne_price_data = melbourne_data.Price
+# the head command returns the top few lines of data.
+print(melbourne_price_data.head())
+
+## Selecting Multiple Columns
+columns_of_interest = ['Landsize', 'BuildingArea']
+two_columns_of_data = melbourne_data[columns_of_interest]
+
+two_columns_of_data.describe()
+
+
+##########
+# Example
+##########
+
+import pandas as pd
+main_file_path = '../input/house-prices-advanced-regression-techniques/train.csv'
+data = pd.read_csv(main_file_path)
+print(data.columns)
+
+price_data = data.SalePrice
+print(price_data.head())
+
+columns_of_interest = ['SalePrice', 'LotArea']
+two_columns_of_data = data[columns_of_interest]
+
+two_columns_of_data.describe()
