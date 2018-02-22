@@ -1,0 +1,72 @@
+@My Kaggle output: https://www.kaggle.com/carolinfly0218/underfitting-overfitting-and-model-optimization
+
+1. overfitting: a model matches the training data almost perfectly, but does poorly in validation and other new data. 
+When there are more splits, we also have fewer data points in each leaf. 
+Leaves with very few samples will make predictions that are quite close to the actual values,
+but they may make very unreliable predictions for new data.  
+
+2. underfitting: tree is shallow
+When a model fails to capture important distinctions and patterns in the data, so it performs poorly even in training data.
+
+3. Optimization: control the tree depth/ overfitting or underfitting -> max_leaf_nodes argument
+
+Use a utility function to help compare MAE scores corresponding to different values of max_leaf_nodes
+
+#################
+# Melbourne data
+#################
+
+from sklearn.metrics import mean_absolute_error
+from sklearn.tree import DecisionTreeRegressor
+
+def get_mae(max_leaf_nodes, predictors_train, predictors_val, targ_train, targ_val):
+    model = DecisionTreeRegressor(max_leaf_nodes=max_leaf_nodes, random_state=0)
+    model.fit(predictors_train, targ_train)
+    preds_val = model.predict(predictors_val)
+    mae = mean_absolute_error(targ_val, preds_val)
+    return(mae)
+    
+# Note: A lower MAE is better.
+    
+# compare MAE with differing values of max_leaf_nodes
+for max_leaf_nodes in [5, 50, 500, 5000]:
+    my_mae = get_mae(max_leaf_nodes, train_X, val_X, train_y, val_y)
+    print("Max leaf nodes: %d  \t\t Mean Absolute Error:  %d" %(max_leaf_nodes, my_mae))
+
+The best decision tree: 500 is the optimal number of leaves since it gives the minimum MAE score.
+
+############
+# Iowa Data
+############
+
+# import data
+import pandas as pd
+main_file_path = '../input/house-prices-advanced-regression-techniques/train.csv'
+data = pd.read_csv(main_file_path)
+
+# define predictor matrix and target variable
+y = data.SalePrice
+predictors = ['LotArea', 'YearBuilt', '1stFlrSF', '2ndFlrSF', 
+                        'FullBath', 'BedroomAbvGr', 'TotRmsAbvGrd']
+X = data[predictors]
+
+# split data
+from sklearn.model_selection import train_test_split
+train_X, val_X, train_y, val_y = train_test_split(X, y, random_state = 0)
+
+# compute MAE score
+from sklearn.metrics import mean_absolute_error
+from sklearn.tree import DecisionTreeRegressor
+
+def get_mae(max_leaf_nodes, predictors_train, predictors_val, targ_train, targ_val):
+    model = DecisionTreeRegressor(max_leaf_nodes=max_leaf_nodes, random_state=0)
+    model.fit(predictors_train, targ_train)
+    preds_val = model.predict(predictors_val)
+    mae = mean_absolute_error(targ_val, preds_val)
+    return(mae)
+
+for max_leaf_nodes in [5, 50, 500, 5000]:
+    my_mae = get_mae(max_leaf_nodes, train_X, val_X, train_y, val_y)
+    print("Max leaf nodes: %d  \t\t Mean Absolute Error:  %d" %(max_leaf_nodes, my_mae))
+
+# Comment: Of the options listed, 50 is the optimal number of leaves.
