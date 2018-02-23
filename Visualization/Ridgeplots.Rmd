@@ -1,0 +1,94 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+Ridgeplots 
+
+Load in our libraries
+
+install(tidyverse) # loads in all the tidyverse libraries
+library(lubridate) # to make dealing with dates easier
+library(ggridges) # the brand new ggjoy package
+
+bugs <- as_data_frame(read.csv("insect_data.csv"))
+
+```{r}
+# load in libraries
+library(tidyverse)  # loads in all the tidyverse libraries
+library(lubridate)  # to make dealing with dates easier
+library(ggridges)   # the brand new ggjoy package
+```
+```{r}
+## Dataset: 
+# I'm using a dataset that contains information about what bugs showed up in a light trap set up  # on the roof of the University of Copenhagen's Zoological Museum and when. 
+
+# read in data & convert it to a tibble
+bugs <- as_data_frame(read.csv("insect_data.csv"))
+
+head(bugs)
+```
+```{r}
+## Add a coulmn with the month of each observation
+
+# mdy() tells the lubridate package what format our dates are in; i.e., "2003-07-15"
+# month() says we only want the month from the date; i.e., 1-12
+bugs$month  <- month(mdy(bugs$date1))
+```
+```{r}
+# list of months for labelling graph
+monthList <- c("Jan","Feb","Mar","April","May", "June","July","Aug","Sep","Oct","Nov","Dec")
+
+# remap months from numbers (3:12) to words (March-December)
+bugs$month <- plyr::mapvalues(bugs$month, levels(as.factor(bugs$month)), monthList[3:12])
+```
+```{r}
+# plot the nubmer of bugs caught by month
+ggplot(data = bugs, aes(x = month, y = individuals)) + geom_point() + 
+  scale_x_discrete(limit=monthList)
+```
+Comment:
+Most insects show up in the summer. (Denmark is in the Northern Hemisphere, so summer runs from June to September). 
+
+```{r}
+# get the total number of insects observed on each day (binning over years)
+bugs$dayInYear <- yday(mdy(bugs$date1))
+
+# joyplot of when insects were observed by order (this is a variable). Scale changeshow tall the peaks are
+ggplot(data = bugs, aes(x = dayInYear, y = order)) + geom_density_ridges(scale = 0.9) + 
+    theme_ridges()
+```
+Comment:
+It looks like both orders (beetles & butterflies) tend to show up at roughly the same time
+```{r}
+# how events have shifted over time
+
+# ridgeplot of dates on which insects were observed by year of observation
+ggplot(data = bugs, aes(x = dayInYear, y = as.factor(year))) + 
+    geom_density_ridges(scale = 0.9) + theme_ridges()
+```
+Comment: Maybe a little bit of shift.
+```{r}
+# look at the variance 
+varianceByYear <- bugs %>% group_by(year) %>% summarise(variance = sd(dayInYear))
+
+# plot variance by year
+ggplot(varianceByYear, aes(year, variance)) + geom_line() + 
+   geom_smooth(method='lm') # this function adds the fitted line (w/ confidence interval)
+```
+
+Comment:
+It looks like there been increasing variance in what day of the year insects are observed in this light trap.
+```{r}
+save.image('insect')
+```
+
+
+
+
+
+
+
+
+
+
